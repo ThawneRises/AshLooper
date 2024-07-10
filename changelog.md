@@ -1,8 +1,9 @@
-## Version 3.0 Changelog
+## Version 4.0 Changelog
 
-### AshLooper Module Script (Version 3.0) Enhancements:
+### AshLooper Module Script (Version 4.0) Enhancements:
 
-- Enhanced boot loop detection with customizable user selection for thresholds, ensuring adaptability across diverse environments.
-- Updated `post-fs-data.sh` to dynamically adjust to user-selected thresholds, optimizing boot loop detection mechanisms.
-- Streamlined installation process and improved user experience with the introduction of the `install.sh` script.
-- Improved detection compatibility with Magisk and Ksu for enhanced functionality and system integration.
+- **Mode Selection Feature**: Added a new feature allowing users to choose between two modes:
+  - **Disable Modules**: Disables the modules without rebooting into recovery.
+  - **Disable Modules & Reboot Recovery**: Disables the modules and reboots into recovery mode.
+- **Improved Logging**.
+- **Added Module Management Script**: Module Management Helps In Managing Flashed Modules Via Recovery, You Can Activate It By Simply Flashing The Module In Recovery.

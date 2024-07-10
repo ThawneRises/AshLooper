@@ -1,3 +1,21 @@
+# Properties
+sysboot=$(getprop sys.boot_completed)
+
+if [ "$sysboot" = 1 ]; then
+    arg1="$1"
+    arg2="$2"
+    my_magisk_installer=true
+    type flash_image &>$(dirname $arg3)/log.txt || flash_image() { dd if="$1" of="$2"; }
+else
+    arg1="$1"
+    arg2="$2"
+    arg3="$3"
+    my_magisk_installer=false
+    type flash_image || flash_image() { dd if="$1" of="$2"; }
+    ui_print() { echo -e "ui_print "$1"\nui_print" >>"/proc/self/fd/$arg2"; }
+    MODPATH="$TMPDIR"
+fi
+
 # External Tools
 chmod -R 0755 $MODPATH/common/addon/Volume-Key-Selector/tools
 
@@ -15,9 +33,8 @@ chooseport_legacy() {
     elif [ $sel -eq 41 ]; then
       return 1
     else
-      echo "- Volume key not detected,Choosing $font as default"
-      echo " "
-      return 0
+      logger "  >[Volume key not detected. Aborting The Process]< "
+      exit 1
     fi
   done
 }
@@ -36,19 +53,19 @@ chooseport() {
       elif (`grep -q 'KEY_VOLUMEDOWN *DOWN' $TMPDIR/events`); then
         return 1
       fi
-      [ $count -gt 9 ] && break
+      [ $count -gt 12 ] && break
     done
     if $error; then
       # abort "Volume key not detected!"
-      echo "- Volume key not detected. Trying keycheck method"
-      echo " "
+      logger "  >[Volume key not detected. Trying keycheck method]< "
+      logger " "
       export chooseport=chooseport_legacy VKSEL=chooseport_legacy
       chooseport_legacy $delay
       return $?
     else
       error=true
-      echo "- Volume key not detected. Try again"
-      echo " "
+      logger "  >[Volume key not detected. Try again]< "
+      logger " "
     fi
   done
 }

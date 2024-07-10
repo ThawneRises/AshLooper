@@ -1,13 +1,64 @@
-##########################################################################################
-#
-# MMT Extended Utility Functions
-#
-##########################################################################################
+# AshLooper Module Functions - Don't modify anything after this - By Ꭺsʜʙᴏʀɴ 々 (@Ripper_Hybrid)
+
+sysboot=$(getprop sys.boot_completed)
+
+if [ "$sysboot" = 1 ]; then
+    arg1="$1"
+    arg2="$2"
+    my_magisk_installer=true
+    type flash_image &>$(dirname $arg3)/log.txt || flash_image() { dd if="$1" of="$2"; }
+    log_file="/cache/AshLooper-Installation.log"
+else
+    arg1="$1"
+    arg2="$2"
+    arg3="$3"
+    my_magisk_installer=false
+    type flash_image || flash_image() { dd if="$1" of="$2"; }
+    ui_print() { echo -e "ui_print "$1"\nui_print" >>"/proc/self/fd/$arg2"; }
+    MODPATH="$TMPDIR"
+    log_file="/cache/Module-Management.log"
+fi
+
+if [ -f "$log_file" ]; then
+rm -f "$log_file"
+fi
+
+echo "$(date '+%d.%m.%y %T'): >[ Logging Starting.... ]<  " > "$log_file"
+
+update_description() {
+    sed -i "s|^description=.*|description=$1|g" "$MODPATH/module.prop"
+}
+
+log_message() {
+  if [ "$sysboot" = 1 ]; then
+     echo "$(date '+%d.%m.%y %T'): >[$1]<" >> "$log_file"
+  else
+     echo "$(date '+%d.%m.%y %T'): $1" >> "$log_file"
+  fi
+}
+
+logger() {
+    local message="$1"
+      ui_print "$message"
+      log_message "$message"
+}
+
+grep_prop() {
+  local REGEX="s/^$1=//p"
+  shift
+  local FILES=$@
+  [ -z "$FILES" ] && FILES='/system/build.prop'
+  cat $FILES 2>/dev/null | dos2unix | sed -n "$REGEX" | head -n 1
+}
+
+delete() { rm -f "$@"; }
+
+delete_recursive() { rm -rf "$@"; }
 
 require_new_ksu() {
-  ui_print "**********************************"
-  ui_print " Please install KernelSU v0.6.6+! "
-  ui_print "**********************************"
+  logger "**********************************"
+  logger " Please install KernelSU v0.6.6+! "
+  logger "**********************************"
   exit 1
 }
 
@@ -26,7 +77,7 @@ cleanup() {
 }
 
 abort() {
-  ui_print "$1"
+  logger "$1"
   rm -rf $MODPATH 2>/dev/null
   cleanup
   rm -rf $TMPDIR 2>/dev/null
@@ -146,7 +197,6 @@ mount_mirrors() {
   done
 }
 
-
 # Check for min/max api version
 [ -z $MINAPI ] || { [ $API -lt $MINAPI ] && abort "! Your system API of $API is less than the minimum api of $MINAPI! Aborting!"; }
 [ -z $MAXAPI ] || { [ $API -gt $MAXAPI ] && abort "! Your system API of $API is greater than the maximum api of $MAXAPI! Aborting!"; }
@@ -188,8 +238,8 @@ elif ! $PARTOVER; then
 fi
 
 if ! $BOOTMODE; then
-  ui_print "- Only uninstall is supported in recovery"
-  ui_print "  Uninstalling!"
+  logger "- Only uninstall is supported in recovery"
+  logger "  Uninstalling!"
   touch $MODPATH/remove
   [ -s $INFO ] && install_script $MODPATH/uninstall.sh || rm -f $INFO $MODPATH/uninstall.sh
   recovery_cleanup
@@ -199,22 +249,21 @@ if ! $BOOTMODE; then
 fi
 
 # Extract files
-echo "###########################"
-ui_print "- Extracting module files"
+logger "###########################"
+logger "- Extracting module files"
 unzip -o "$ZIPFILE" -x 'META-INF/*' 'common/functions.sh' -d $MODPATH >&2
 [ -f "$MODPATH/common/addon.tar.xz" ] && tar -xf $MODPATH/common/addon.tar.xz -C $MODPATH/common 2>/dev/null
 
 # Run addons
 if [ "$(ls -A $MODPATH/common/addon/*/install.sh 2>/dev/null)" ]; then
-  ui_print "- Running Addons"
+  logger "- Running Addons"
   for i in $MODPATH/common/addon/*/install.sh; do
-    ui_print "- Running $(echo $i | sed -r "s|$MODPATH/common/addon/(.*)/install.sh|\1|")..."
+    logger "- Running $(echo $i | sed -r "s|$MODPATH/common/addon/(.*)/install.sh|\1|")..."
     . $i
   done
 fi
 
-# Remove files outside of module directory
-ui_print "- Removing old files"
+logger "- Removing old files"
 
 if [ -f $INFO ]; then
   while read LINE; do
@@ -234,13 +283,22 @@ if [ -f $INFO ]; then
 fi
 
 ### Install
-ui_print "- Installing"
+logger "- Installing"
 
+sysboot=$(getprop sys.boot_completed)
+
+if [ "$sysboot" = 1 ]; then
 [ -f "$MODPATH/common/install.sh" ] && . $MODPATH/common/install.sh
+else
+logger "- Recovery Mode!!"
+logger "- Activating Module Management!!"
+logger "###########################"
+[ -f "$TMPDIR/common/mm.sh" ] && . $TMPDIR/common/mm.sh
+fi
 
-ui_print "###########################"
-ui_print "- Setting Permissions"
-ui_print "###########################"
+logger "###########################"
+logger "- Setting Permissions"
+logger "###########################"
 set_perm_recursive $MODPATH 0 0 0755 0644
 for i in /system/vendor /vendor /system/vendor/app /vendor/app /system/vendor/etc /vendor/etc /system/odm/etc /odm/etc /system/vendor/odm/etc /vendor/odm/etc /system/vendor/overlay /vendor/overlay; do
   if [ -d "$MODPATH$i" ] && [ ! -L "$MODPATH$i" ]; then
