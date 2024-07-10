@@ -1,5 +1,11 @@
 # AshLooper
 
+</div>
+<div align="center">
+  <img src="https://raw.githubusercontent.com/RipperHybrid/AshLooper/Master/.github/resources/banner.png" width="80%" alt="Banner">
+
+</div>
+
 ## Description:
 AshLooper is a comprehensive module designed to address boot loop issues caused by problematic modules installed via KernelSU or Magisk on Android devices.
 
