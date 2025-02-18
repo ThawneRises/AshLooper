@@ -1,38 +1,62 @@
 # AshLooper
 
-</div>
 <div align="center">
   <img src="https://raw.githubusercontent.com/RipperHybrid/AshLooper/Master/.github/resources/banner.png" width="80%" alt="Banner">
-
+  <br>
+  <a href="https://git.io/typing-svg">
+    <img src="https://readme-typing-svg.demolab.com?font=Orbitron&weight=600&size=18&duration=3000&pause=1000&color=A753F7&vCenter=true&width=450&lines=AshLooper+fixes+boot+loops;Caused+by+malfunctioning+modules;Monitors+boot+process;And+takes+action+fixes+issues+automatically." alt="Typing SVG">
+  </a>
 </div>
 
-## Description:
-AshLooper is a comprehensive module designed to address boot loop issues caused by problematic modules installed via KernelSU or Magisk on Android devices.
+---
 
-### Functionality:
-- **Boot Loop Detection:** AshLooper monitors the boot process and checks for boot loops caused by malfunctioning modules.
-- **Boot Attempt Count:** It keeps track of the number of boot attempts by incrementing a counter stored in the `module.prop` file.
-- **Threshold Control:** AshLooper allows users to set a threshold for the number of permissible boot attempts before taking action.
-- **Mode Selection:** Users can now select between two modes of operation:
-  - **Disable Modules Mode:** Disables the problematic modules without rebooting into recovery mode.
-  - **Disable Modules & Reboot Recovery Mode:** Disables the problematic modules and reboots the device into recovery mode.
+## 📌 Features
 
-## How it Works:
-1. **Boot Process Monitoring:** AshLooper actively monitors the boot process of the device.
-2. **Boot Attempt Tracking:** Upon each boot attempt, AshLooper incrementally updates the boot attempt count stored in the `module.prop` file.
-3. **Threshold Check:** AshLooper compares the current boot attempt count with the predefined threshold.
-4. **Threshold Exceeded:** If the boot attempt count surpasses the threshold, AshLooper takes action based on the selected mode:
-   - **Disable Modules Mode:** AshLooper disables the problematic modules without rebooting into recovery mode, allowing the device to boot normally.
-   - **Disable Modules & Reboot Recovery Mode:** AshLooper disables the problematic modules and reboots the device into recovery mode to prevent the device from getting stuck in a boot loop and facilitate troubleshooting.
+- **Boot Loop Detection** – Identifies boot loops and tracks boot attempts.
+- **Threshold-Based Action** – Takes action when the boot count exceeds the threshold.
+- **Power Cycle Awareness** – Retains boot count after power off.
+- **Recovery Mode Customization** – Manual module management when flashed in recovery.
 
-## KernelSU and Magisk Support:
-- AshLooper seamlessly integrates with both KernelSU and Magisk, ensuring comprehensive support for a wide range of Android devices and module configurations.
+---
 
-## Disclaimer:
-Use AshLooper responsibly and at your own risk. The developer assumes no responsibility for any damage or issues arising from its use.
+## ⚙️ Modes
 
-## Reporting Issues and Contributions:
-If you encounter any problems or have suggestions for improvement, please report them by opening an issue or submitting a pull request on GitHub. Your contributions are welcome and appreciated.
+- **Disable Modules Mode (DM)** – Disables all modules except AshLooper and allows normal boot.
+- **Disable & Reboot Recovery Mode (DMR)** – Disables modules and reboots into recovery for troubleshooting.
+- **Recovery Flash Mode** – Enables manual module management when flashed in recovery.
 
-## Support:
-For inquiries, troubleshooting, and support, please contact [Ripper Hybrid](https://t.me/Ripper_Hybrid) on Telegram.
+---
+
+## 🛠️ Installation
+
+1. Download and flash **AshLooper** via Magisk or recovery.
+2. Set the desired boot threshold and mode.
+3. Reboot your device.
+
+---
+
+## 🔔 Notes
+
+- **DMR mode** is recommended if your device is stuck in a boot loop, as it allows you to access recovery for fixing the issue.
+- Flashing AshLooper in **recovery mode** provides additional customization options for module management.
+- Retains boot attempt count even after a full power-off, ensuring accurate boot loop detection.
+
+---
+
+## 📄 License
+
+Licensed under the [GPL-3.0 License](LICENSE).
+
+---
+
+## KernelSU and Magisk Support
+
+AshLooper works with both KernelSU and Magisk for a wide range of device compatibility.
+
+## Disclaimer
+
+Use AshLooper at your own risk. The developer is not responsible for any damage.
+
+## Support
+
+For support, contact [Ripper Hybrid](https://t.me/Ripper_Hybrid) on Telegram.
